@@ -92,24 +92,34 @@ function Map() {
 
             if (roundCounter === 10) {
                 setEndGame(true)
-                if (onlyBigCities && (score > bigCitiesHighScore || !bigCitiesHighScore)) {
-                    setBigCitiesHighScore(score);
+
+                // Relevant Score
+                let relevantScore;
+                distance < 20 ? relevantScore = score + 100
+                    : distance < 40 ? relevantScore = score + 90
+                        : distance < 55 ? relevantScore = score + 80
+                            : distance < 80 ? relevantScore = score + 60
+                                : distance < 100 ? relevantScore = score + 40
+                                    : relevantScore = score
+
+                if (onlyBigCities && (relevantScore > bigCitiesHighScore || !bigCitiesHighScore)) {
+                    setBigCitiesHighScore(relevantScore);
                     try {
-                        await AsyncStorage.setItem("bigCitiesHighScore", score);
+                        await AsyncStorage.setItem("bigCitiesHighScore", relevantScore);
                     } catch (err) {
                         console.log(err.message);
                     }
-                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${score}`)
-                } else if (!onlyBigCities && (score > highScore || !highScore)) {
-                    setHighScore(score);
+                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${relevantScore}`)
+                } else if (!onlyBigCities && (relevantScore > highScore || !highScore)) {
+                    setHighScore(relevantScore);
                     try {
-                        await AsyncStorage.setItem("highScore", score);
+                        await AsyncStorage.setItem("highScore", relevantScore);
                     } catch (err) {
                         console.log(err.message)
                     }
-                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${score}`)
+                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${relevantScore}`)
                 } else {
-                    Alert.alert("Congratulations", `You've been finished the Game, your Score is: ${score}`)
+                    Alert.alert("Congratulations", `You've been finished the Game, your Score is: ${relevantScore}`)
                 }
             }
             // Cumulative score and alert points

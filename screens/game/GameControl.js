@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
         margin: '1%',
         justifyContent: 'center',
         alignItems: 'center',
+        width: '29%',
     },
     button: {
         margin: '1%',
