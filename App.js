@@ -1,12 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import Navbar from './screens/general/Navbar'
+import Header from './screens/general/Header'
+import Footer from './screens/general/Footer'
+
+import { NavigationContainer } from '@react-navigation/native';
+import DrawerNavigator from "./navigation/drawerNavigator";
+import { navigationRef } from './navigation/rootNavigation';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <NavigationContainer ref={navigationRef}>
+
+        <View style={styles.navbar}>
+          <Navbar />
+        </View>
+
+        <View style={styles.header}>
+          <Header />
+        </View>
+        <View style={styles.navigator}>
+          <DrawerNavigator />
+        </View>
+        <View style={styles.footer}>
+          <Footer />
+        </View>
+
+      </NavigationContainer>
     </View>
   );
 }
@@ -15,7 +37,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+  },
+  navbar: {
+    flex: 0.1,
+    marginTop: 25,
+  },
+  header: {
+    flex: 0.1,
+    marginTop: 10,
+  },
+  navigator: {
+    flex: 1,
+  },
+  footer: {
+    flex: 0.1,
   },
 });
