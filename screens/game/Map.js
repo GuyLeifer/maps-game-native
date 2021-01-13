@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Alert } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorage } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps';
 // import SweetAlert from 'react-native-sweet-alert';
 import GameControl from './GameControl';
@@ -19,8 +19,8 @@ function Map() {
 
     // states for game controller
     const [score, setScore] = useState(0); // Cumulative Score
-    const [highScore, setHighScore] = useState(null); // high score for local storage
-    const [bigCitiesHighScore, setBigCitiesHighScore] = useState(null); // high score of easy mode for local storage
+    const [highScore, setHighScore] = useState(); // high score for local storage
+    const [bigCitiesHighScore, setBigCitiesHighScore] = useState(); // high score of easy mode for local storage
 
     const [hint, setHint] = useState(false); // hint setter
     const [roundCounter, setRoundCounter] = useState(1); // round amount counter
@@ -34,6 +34,21 @@ function Map() {
 
     const [newGame, setNewGame] = useState(false)
     const [endGame, setEndGame] = useState(false)
+
+    //- check the high score from local storage
+    useEffect(() =>
+        async () => {
+            try {
+                const savedHighScore = await AsyncStorage.getItem("highScore");
+                setHighScore(savedHighScore);
+                const savedHighScoreBigCities = await AsyncStorage.getItem("bigCitiesHighScore");
+                setBigCitiesHighScore(savedHighScoreBigCities);
+                console.log(savedHighScore, savedHighScoreBigCities)
+            } catch (error) {
+                console.log(error.message)
+            }
+
+        }, []);
 
     //functions
     const getRandomLocation = () => {
@@ -57,7 +72,7 @@ function Map() {
         });
     }, [onlyBigCities]);
 
-    const onMapClick = (coordinate) => {
+    const onMapClick = async (coordinate) => {
         if (!showCorrectLocation) {
             setChosenLocation({
                 longitude: coordinate.longitude,
@@ -77,7 +92,25 @@ function Map() {
 
             if (roundCounter === 10) {
                 setEndGame(true)
-                Alert.alert("Congratulations", `You've been finished the Game, your Score is: ${score}`)
+                if (onlyBigCities && (score > bigCitiesHighScore || !bigCitiesHighScore)) {
+                    setBigCitiesHighScore(score);
+                    try {
+                        await AsyncStorage.setItem("bigCitiesHighScore", score);
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${score}`)
+                } else if (!onlyBigCities && (score > highScore || !highScore)) {
+                    setHighScore(score);
+                    try {
+                        await AsyncStorage.setItem("highScore", score);
+                    } catch (err) {
+                        console.log(err.message)
+                    }
+                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${score}`)
+                } else {
+                    Alert.alert("Congratulations", `You've been finished the Game, your Score is: ${score}`)
+                }
             }
             // Cumulative score and alert points
             if (distance < 20) {
@@ -112,25 +145,8 @@ function Map() {
             setHint(false);
             setShowCorrectLocation(false);
             setChosenLocation({});
-            if (ended) {
-                Alert.alert("You've been finished the Game")
-                if (onlyBigCities) {
-                    if (score > bigCitiesHighScore || !bigCitiesHighScore) {
-                        setBigCitiesHighScore(score);
-                        // AsyncStorage.setItem("bigCitiesHighScore", score);
-                        Alert.alert("Wow", "New Record", "success")
-                    }
-                } else {
-                    if (score > highScore || !highScore) {
-                        setHighScore(score);
-                        // AsyncStorage.setItem("highScore", score);
-                        Alert.alert("Wow", "New Record", "success")
-                    }
-                }
-            } else {
-                setRoundCounter((prev) => prev + 1);
-                startRound();
-            }
+            setRoundCounter((prev) => prev + 1);
+            startRound();
         } else {
             Alert.alert("Error", "Finish the current round before going to the next round", "error");
         }
@@ -153,8 +169,8 @@ function Map() {
     return (
         <>
             <GameControl
-                // highScore={highScore}
-                // bigCitiesHighScore={bigCitiesHighScore}
+                highScore={highScore}
+                bigCitiesHighScore={bigCitiesHighScore}
                 reset={resetMap}
                 score={score}
                 distance={distanceFromTarget}
@@ -163,7 +179,7 @@ function Map() {
                 showCorrectLocation={showCorrectLocation}
                 hintSetter={setHint}
                 setOnlyBigCities={setOnlyBigCities}
-                bigCities={onlyBigCities}
+                onlyBigCities={onlyBigCities}
                 setNewGame={setNewGame}
                 endGame={endGame}
                 setEndGame={setEndGame}

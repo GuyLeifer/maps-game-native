@@ -12,7 +12,7 @@ function GameControl({
     highScore,
     setOnlyBigCities,
     bigCitiesHighScore,
-    bigCities,
+    onlyBigCities,
     showCorrectLocation,
     setNewGame,
     endGame
@@ -56,7 +56,7 @@ function GameControl({
         >
             <Text style={styles.title}>Game Controller</Text>
             <View style={styles.viewFlex}>
-                {bigCities ?
+                {onlyBigCities ?
                     <View style={styles.buttons}>
                         <TouchableOpacity
                             onPress={() => modeChange(false)}
@@ -88,12 +88,18 @@ function GameControl({
                 <View style={styles.data}>
                     <View>
                         <Text style={styles.text}>Score: {score} Points</Text>
+                        {(highScore && !onlyBigCities) ?
+                            <Text style={styles.text}>High Score: {highScore} Points</Text>
+                            : (bigCitiesHighScore && onlyBigCities) ?
+                                <Text style={styles.text}>High Score: {bigCitiesHighScore} Points</Text>
+                                : null
+                        }
                         <Text style={styles.text}>Target: <Text style={styles.target}>{location}</Text></Text>
                     </View>
                     <View>
                         {distance && <Text style={styles.text}>Distance: {distance} KM</Text>}
                         <Text style={styles.text}>Round: {roundCounter}/10</Text>
-                        {bigCities ?
+                        {onlyBigCities ?
                             bigCitiesHighScore && <Text style={styles.text}>High Score: {bigCitiesHighScore}</Text>
                             :
                             highScore && <Text style={styles.text}>High Score: {highScore}</Text>
