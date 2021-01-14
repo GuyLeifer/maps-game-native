@@ -101,6 +101,7 @@ function Map() {
                             : distance < 80 ? relevantScore = score + 60
                                 : distance < 100 ? relevantScore = score + 40
                                     : relevantScore = score
+                setScore(relevantScore)
 
                 if (onlyBigCities && (relevantScore > bigCitiesHighScore || !bigCitiesHighScore)) {
                     setBigCitiesHighScore(relevantScore);
@@ -121,31 +122,32 @@ function Map() {
                 } else {
                     Alert.alert("Congratulations", `You've been finished the Game, your Score is: ${relevantScore}`)
                 }
-            }
-            // Cumulative score and alert points
-            if (distance < 20) {
-                setScore((prev) => prev + 100);
-                setKnownLocations(...knownLocations, randomLocation.name);
-                Alert.alert("Great", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 100 Points!")
-            } else if (distance < 40) {
-                setScore((prev) => prev + 90);
-                setKnownLocations(...knownLocations, randomLocation.name);
-                Alert.alert("Very Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 90 Points!")
-            } else if (distance < 55) {
-                setScore((prev) => prev + 80);
-                setKnownLocations(...knownLocations, randomLocation.name);
-                Alert.alert("Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 80 Points!")
-            } else if (distance < 80) {
-                setScore((prev) => prev + 60);
-                setKnownLocations(...knownLocations, randomLocation.name);
-                Alert.alert("Well", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 60 Points!")
-            } else if (distance < 100) {
-                setScore((prev) => prev + 40);
-                setKnownLocations(...knownLocations, randomLocation.name);
-                Alert.alert("Better Next Time", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 40 Points!")
             } else {
-                setUnknownLocations(...unknownLocations, randomLocation.name);
-                Alert.alert("Wrong", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 0 Points!")
+                // Cumulative score and alert points
+                if (distance < 20) {
+                    setScore((prev) => prev + 100);
+                    setKnownLocations(...knownLocations, randomLocation.name);
+                    Alert.alert("Great", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 100 Points!")
+                } else if (distance < 40) {
+                    setScore((prev) => prev + 90);
+                    setKnownLocations(...knownLocations, randomLocation.name);
+                    Alert.alert("Very Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 90 Points!")
+                } else if (distance < 55) {
+                    setScore((prev) => prev + 80);
+                    setKnownLocations(...knownLocations, randomLocation.name);
+                    Alert.alert("Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 80 Points!")
+                } else if (distance < 80) {
+                    setScore((prev) => prev + 60);
+                    setKnownLocations(...knownLocations, randomLocation.name);
+                    Alert.alert("Well", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 60 Points!")
+                } else if (distance < 100) {
+                    setScore((prev) => prev + 40);
+                    setKnownLocations(...knownLocations, randomLocation.name);
+                    Alert.alert("Better Next Time", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 40 Points!")
+                } else {
+                    setUnknownLocations(...unknownLocations, randomLocation.name);
+                    Alert.alert("Wrong", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 0 Points!")
+                }
             }
         }
     }

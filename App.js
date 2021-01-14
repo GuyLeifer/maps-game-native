@@ -9,27 +9,31 @@ import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from "./navigation/drawerNavigator";
 import { navigationRef } from './navigation/rootNavigation';
 
+import { AuthProvider } from './screens/firebase/contexts/AuthContext';
+
 export default function App() {
   return (
-    <View style={styles.container}>
-      <NavigationContainer ref={navigationRef}>
+    <AuthProvider>
+      <View style={styles.container}>
+        <NavigationContainer ref={navigationRef}>
 
-        <View style={styles.navbar}>
-          <Navbar />
-        </View>
+          <View style={styles.navbar}>
+            <Navbar />
+          </View>
 
-        <View style={styles.header}>
-          <Header />
-        </View>
-        <View style={styles.navigator}>
-          <DrawerNavigator />
-        </View>
-        <View style={styles.footer}>
-          <Footer />
-        </View>
+          <View style={styles.header}>
+            <Header />
+          </View>
+          <View style={styles.navigator}>
+            <DrawerNavigator />
+          </View>
+          <View style={styles.footer}>
+            <Footer />
+          </View>
 
-      </NavigationContainer>
-    </View>
+        </NavigationContainer>
+      </View>
+    </AuthProvider>
   );
 }
 

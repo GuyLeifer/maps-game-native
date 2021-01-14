@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import GameInfo from './GameInfo'
 import GoogleMapsIcon from './images/googleMapsIcon.png';
+import { useAuth } from "../firebase/contexts/AuthContext"
 
-function About() {
+function About({ navigation }) {
+
+    const { currentUser } = useAuth()
 
     return (
         <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.container}>
@@ -29,6 +32,9 @@ function About() {
                 <Text style={styles.textPoint}>60 points - 80 KM</Text>
                 <Text style={styles.textPoint}>40 points - 100 KM</Text>
             </View>
+            <TouchableOpacity style={styles.appButtonContainer} onPress={() => { currentUser ? navigation.navigate('Home') : navigation.navigate('Login') }} >
+                <Text style={styles.appButtonText}>{currentUser ? "Let's Play" : "Login"}</Text>
+            </TouchableOpacity>
         </LinearGradient>
     )
 }
@@ -64,7 +70,21 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 18,
-    }
+    },
+    appButtonContainer: {
+        elevation: 8,
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        marginVertical: 10,
+        paddingHorizontal: 10
+    },
+    appButtonText: {
+        fontSize: 15,
+        color: "darkblue",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
 })
 
 export default About

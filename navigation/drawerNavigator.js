@@ -1,14 +1,19 @@
 import React from "react";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import AccountStackNavigator from './stackNavigator'
 
-import Home from '../screens/home/Home'
+import Map from '../screens/game/Map'
 import About from '../screens/about/About'
 
+import { useAuth } from "../screens/firebase/contexts/AuthContext"
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
+
+    const { currentUser } = useAuth()
+
     return (
         <Drawer.Navigator
             drawerStyle={{
@@ -24,14 +29,17 @@ const DrawerNavigator = () => {
                 inactiveTintColor: 'black',
             }}
         >
-            <Drawer.Screen
-                name="Home" component={Home}
-                options={({ navigation }) => ({
-                    headerLeft: () => (
-                        <DrawerButton onPress={() => navigation.toggleDrawer()} />
-                    ),
-                })}
-            />
+            {currentUser &&
+                <Drawer.Screen
+                    name="Home" component={Map}
+                    options={({ navigation }) => ({
+                        headerLeft: () => (
+                            <DrawerButton onPress={() => navigation.toggleDrawer()} />
+                        ),
+                    })}
+                />
+            }
+            <Drawer.Screen name="Account" component={AccountStackNavigator} />
             <Drawer.Screen name="About" component={About} />
         </Drawer.Navigator>
     );

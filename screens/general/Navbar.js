@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -8,10 +8,12 @@ import * as RootNavigation from '../../navigation/rootNavigation';
 //icons
 import accountIcon from './images/accountIcon.jpg';
 
-// import { useAuth } from "../firebaseAuth/contexts/AuthContext";
+import { useAuth } from "../firebase/contexts/AuthContext"
 // import { auth, storage } from '../firebaseAuth/firebase';
 
 function Navbar() {
+
+    const { currentUser } = useAuth()
 
     const [authIcon, setAuthIcon] = useState(accountIcon);
 
@@ -33,6 +35,18 @@ function Navbar() {
     //     if(!user) setAuthIcon(accountIcon)
     // })
 
+    const loginFirst = () => {
+        Alert.alert("Oops..", "You can't play before you logged in\nPlease Login First\nEnjoy The Game!", [
+            {
+                text: "Log In", onPress: () => RootNavigation.navigate('Login'),
+            },
+            {
+                text: "I dont have an account", onPress: () => RootNavigation.navigate('SignIn'),
+            },
+        ],
+            { cancelable: false });
+    }
+
     return (
         <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.navbar}>
             <TouchableOpacity onPress={() => RootNavigation.navigate('About')}>
@@ -47,7 +61,7 @@ function Navbar() {
                     source={require('./images/israelIcon.png')}
                 />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => RootNavigation.navigate('Home')}>
+            <TouchableOpacity onPress={() => { currentUser ? RootNavigation.navigate('Home') : loginFirst() }}>
                 <Image
                     style={styles.icon}
                     source={require('./images/homeIcon.png')}
