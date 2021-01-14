@@ -103,15 +103,39 @@ function Map() {
             if (roundCounter === 10) {
                 setEndGame(true)
 
-                // Relevant Score
+                let known = `Known Locations:\n`;
+                knownLocations.forEach((location => known += location + ", "))
+                let unknown = `\n\nUnknown Locations:\n`
+                unknownLocations.forEach((location => unknown += location + ", "))
+
+                // Relevant Score and Relevant Summary
                 let relevantScore;
-                distance < 20 ? relevantScore = score + 100
-                    : distance < 40 ? relevantScore = score + 90
-                        : distance < 55 ? relevantScore = score + 80
-                            : distance < 80 ? relevantScore = score + 60
-                                : distance < 100 ? relevantScore = score + 40
-                                    : relevantScore = score
+                if (distance < 20) {
+                    relevantScore = score + 100
+                    known += randomLocation.name
+                }
+                else if (distance < 40) {
+                    relevantScore = score + 90
+                    known += randomLocation.name
+                }
+                else if (distance < 55) {
+                    relevantScore = score + 80
+                    known += randomLocation.name
+                }
+                else if (distance < 80) {
+                    relevantScore = score + 60
+                    known += randomLocation.name
+                }
+                else if (distance < 100) {
+                    relevantScore = score + 40
+                    known += randomLocation.name
+                }
+                else {
+                    relevantScore = score
+                    unknown += randomLocation.name
+                }
                 setScore(relevantScore)
+                const summaryString = known + unknown;
 
                 if (onlyBigCities && (relevantScore > bigCitiesHighScore || !bigCitiesHighScore)) {
                     setBigCitiesHighScore(relevantScore);
@@ -120,7 +144,8 @@ function Map() {
                     } catch (err) {
                         console.log(err.message);
                     }
-                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${relevantScore}`)
+                    Alert.alert("Wow", `New Record\nYou've been finished the Game,\nyour Score is: ${relevantScore}`)
+                    Alert.alert("Summary", summaryString)
                 } else if (!onlyBigCities && (relevantScore > highScore || !highScore)) {
                     setHighScore(relevantScore);
                     try {
@@ -128,9 +153,11 @@ function Map() {
                     } catch (err) {
                         console.log(err.message)
                     }
-                    Alert.alert("Wow", `New Record\nYou've been finished the Game, your Score is: ${relevantScore}`)
+                    Alert.alert("Wow", `New Record\nYou've been finished the Game,\nyour Score is: ${relevantScore}`)
+                    Alert.alert("Summary", summaryString)
                 } else {
-                    Alert.alert("Congratulations", `You've been finished the Game, your Score is: ${relevantScore}`)
+                    Alert.alert("Congratulations", `You've been finished the Game,\nyour Score is: ${relevantScore}`)
+                    Alert.alert("Summary", summaryString)
                 }
             } else {
                 // Cumulative score and alert points
