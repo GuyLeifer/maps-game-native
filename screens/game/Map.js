@@ -110,23 +110,23 @@ function Map() {
 
                 // Relevant Score and Relevant Summary
                 let relevantScore;
-                if (distance < 20) {
+                if (distance < 10) {
                     relevantScore = score + 100
                     known += randomLocation.name
                 }
-                else if (distance < 40) {
+                else if (distance < 20) {
                     relevantScore = score + 90
                     known += randomLocation.name
                 }
-                else if (distance < 55) {
+                else if (distance < 30) {
                     relevantScore = score + 80
                     known += randomLocation.name
                 }
-                else if (distance < 80) {
+                else if (distance < 40) {
                     relevantScore = score + 60
                     known += randomLocation.name
                 }
-                else if (distance < 100) {
+                else if (distance < 50) {
                     relevantScore = score + 40
                     known += randomLocation.name
                 }
@@ -161,23 +161,23 @@ function Map() {
                 }
             } else {
                 // Cumulative score and alert points
-                if (distance < 20) {
+                if (distance < 10) {
                     setScore((prev) => prev + 100);
                     setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Great", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 100 Points!")
-                } else if (distance < 40) {
+                } else if (distance < 20) {
                     setScore((prev) => prev + 90);
                     setKnownLocations(prev => [...prev, randomLocation.name]);
-                    Alert.alert("Very Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 90 Points!")
-                } else if (distance < 55) {
+                    Alert.alert("Almost", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 90 Points!")
+                } else if (distance < 30) {
                     setScore((prev) => prev + 80);
                     setKnownLocations(prev => [...prev, randomLocation.name]);
-                    Alert.alert("Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 80 Points!")
-                } else if (distance < 80) {
+                    Alert.alert("very Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 80 Points!")
+                } else if (distance < 40) {
                     setScore((prev) => prev + 60);
                     setKnownLocations(prev => [...prev, randomLocation.name]);
-                    Alert.alert("Well", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 60 Points!")
-                } else if (distance < 100) {
+                    Alert.alert("Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 60 Points!")
+                } else if (distance < 50) {
                     setScore((prev) => prev + 40);
                     setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Better Next Time", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 40 Points!")

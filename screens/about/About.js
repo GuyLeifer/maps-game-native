@@ -26,11 +26,11 @@ function About({ navigation }) {
             <View style={styles.view}>
                 <Text style={styles.textPoint}>As close as you will locate the location,</Text>
                 <Text style={styles.textPoint}>you'll get points:</Text>
-                <Text style={styles.textPoint}>100 points - 20 KM</Text>
-                <Text style={styles.textPoint}>90 points - 40 KM</Text>
-                <Text style={styles.textPoint}>80 points - 55 KM</Text>
-                <Text style={styles.textPoint}>60 points - 80 KM</Text>
-                <Text style={styles.textPoint}>40 points - 100 KM</Text>
+                <Text style={styles.textPoint}>100 points - 10 KM</Text>
+                <Text style={styles.textPoint}>90 points - 20 KM</Text>
+                <Text style={styles.textPoint}>80 points - 30 KM</Text>
+                <Text style={styles.textPoint}>60 points - 40 KM</Text>
+                <Text style={styles.textPoint}>40 points - 50 KM</Text>
             </View>
             <TouchableOpacity style={styles.appButtonContainer} onPress={() => { currentUser ? navigation.navigate('Home') : navigation.navigate('Login') }} >
                 <Text style={styles.appButtonText}>{currentUser ? "Let's Play" : "Login"}</Text>
