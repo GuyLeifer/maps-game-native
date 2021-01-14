@@ -43,7 +43,6 @@ function Map() {
                 setHighScore(savedHighScore);
                 const savedHighScoreBigCities = await AsyncStorage.getItem("bigCitiesHighScore");
                 setBigCitiesHighScore(savedHighScoreBigCities);
-                console.log(savedHighScore, savedHighScoreBigCities)
             } catch (error) {
                 console.log(error.message)
             }
@@ -54,10 +53,21 @@ function Map() {
     const getRandomLocation = () => {
         if (onlyBigCities) {
             const bigCities = Locations.filter((location) => location.MGLSDE_L_1 >= 40000)
-            return bigCities[Math.floor(Math.random() * bigCities.length)];
+            const newLocation = bigCities[Math.floor(Math.random() * bigCities.length)];
+            if (knownLocations.find(location => location === newLocation.MGLSDE_L_4) || unknownLocations.find(location => location === newLocation.MGLSDE_L_4)) {
+                console.log("have been found")
+                return getRandomLocation()
+            } else {
+                return newLocation
+            }
         }
         else {
-            return Locations[Math.floor(Math.random() * Locations.length)];
+            const newLocation = Locations[Math.floor(Math.random() * Locations.length)];
+            if (knownLocations.find(location => location === newLocation.MGLSDE_L_4) || unknownLocations.find(location => location === newLocation.MGLSDE_L_4)) {
+                return getRandomLocation()
+            } else {
+                return newLocation
+            }
         }
     };
 
@@ -70,7 +80,7 @@ function Map() {
             latitude: location.Y,
             name: location.MGLSDE_L_4,
         });
-    }, [onlyBigCities]);
+    }, [onlyBigCities, newGame, knownLocations, unknownLocations]);
 
     const onMapClick = async (coordinate) => {
         if (!showCorrectLocation) {
@@ -126,26 +136,26 @@ function Map() {
                 // Cumulative score and alert points
                 if (distance < 20) {
                     setScore((prev) => prev + 100);
-                    setKnownLocations(...knownLocations, randomLocation.name);
+                    setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Great", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 100 Points!")
                 } else if (distance < 40) {
                     setScore((prev) => prev + 90);
-                    setKnownLocations(...knownLocations, randomLocation.name);
+                    setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Very Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 90 Points!")
                 } else if (distance < 55) {
                     setScore((prev) => prev + 80);
-                    setKnownLocations(...knownLocations, randomLocation.name);
+                    setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Good", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 80 Points!")
                 } else if (distance < 80) {
                     setScore((prev) => prev + 60);
-                    setKnownLocations(...knownLocations, randomLocation.name);
+                    setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Well", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 60 Points!")
                 } else if (distance < 100) {
                     setScore((prev) => prev + 40);
-                    setKnownLocations(...knownLocations, randomLocation.name);
+                    setKnownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Better Next Time", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 40 Points!")
                 } else {
-                    setUnknownLocations(...unknownLocations, randomLocation.name);
+                    setUnknownLocations(prev => [...prev, randomLocation.name]);
                     Alert.alert("Wrong", "Your Distance from the target was: " + String(distance) + " Kilometers, You Got 0 Points!")
                 }
             }
@@ -175,6 +185,8 @@ function Map() {
         setChosenLocation({});
         setDistanceFromTarget();
         setHint(false);
+        setKnownLocations([])
+        setUnknownLocations([])
         startRound()
     }, [newGame, onlyBigCities]);
 
