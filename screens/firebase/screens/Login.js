@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity, TouchableWithoutFeedback, TextInput, Keyboard } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -12,25 +11,28 @@ function Login({ navigation }) {
 
     const { control, handleSubmit, errors } = useForm();
     const [error, setError] = useState()
+    const [loading, setLoading] = useState(false)
 
     const { login, googleLogin, facebookLogin } = useAuth()
 
 
     const handleLogin = async ({ email, password }) => {
         try {
+            setLoading(true)
             setError("")
             await login(email, password);
             navigation.navigate('About')
         } catch {
             setError("Failed to log in")
         }
+        setLoading(false)
     }
 
     async function handleGoogleLogin() {
         try {
             setError("")
-            await googleLogin();
-            navigation.navigate('About')
+            const result = await googleLogin();
+            result && navigation.navigate('About')
         } catch {
             setError("Failed to log in")
         }
@@ -59,14 +61,14 @@ function Login({ navigation }) {
                     </View>
                     <View style={styles.icons}>
                         <TouchableOpacity
-                            style={{ flex: 0.5 }}
+                            // style={{ flex: 0.5 }}
                             onPress={handleGoogleLogin}
                         >
                             <Image source={require('./images/googleIcon.png')} style={styles.icon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handleFacebookLogin}>
+                        {/* <TouchableOpacity onPress={handleFacebookLogin}>
                             <Image source={require('./images/facebookIcon.png')} style={styles.icon} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View>
                         <Text style={styles.text}>Or Login With Email Account</Text>
@@ -113,7 +115,7 @@ function Login({ navigation }) {
                             />
                             {errors.password && <Text style={styles.textErr}>Password is required.</Text>}
                             {error ? <Text style={styles.textErr}>{error}</Text> : null}
-                            <TouchableOpacity style={styles.appButtonContainer} onPress={handleSubmit(handleLogin)} >
+                            <TouchableOpacity style={loading ? styles.appButtonContainerDisabled : styles.appButtonContainer} onPress={handleSubmit(handleLogin)} >
                                 <Text style={styles.appButtonText}>Log In</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => console.log("forgot password")}>
@@ -127,7 +129,6 @@ function Login({ navigation }) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {/* </KeyboardAwareScrollView> */}
                 </LinearGradient>
             </ScrollView>
         </TouchableWithoutFeedback>
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        margin: '2%',
+        margin: '10%',
     },
     iconTouch: {
         alignItems: 'center',
@@ -203,6 +204,13 @@ const styles = StyleSheet.create({
     appButtonContainer: {
         elevation: 8,
         backgroundColor: "#fff",
+        borderRadius: 10,
+        marginVertical: 10,
+        marginHorizontal: 60
+    },
+    appButtonContainerDisabled: {
+        elevation: 8,
+        backgroundColor: "#888",
         borderRadius: 10,
         marginVertical: 10,
         marginHorizontal: 60

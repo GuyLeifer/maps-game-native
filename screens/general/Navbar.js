@@ -73,7 +73,7 @@ function Navbar() {
                     source={require('./images/googleMapsIcon.png')}
                 />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => RootNavigation.navigate('Account')} >
+            <TouchableOpacity onPress={() => { currentUser ? RootNavigation.navigate('Account', { screen: 'Dashboard' }) : RootNavigation.navigate('Account') }} >
                 <Image
                     style={styles.icon}
                     source={require('./images/accountIcon.jpg')}

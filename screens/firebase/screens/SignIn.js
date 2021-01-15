@@ -13,10 +13,12 @@ function Login({ navigation }) {
     const { control, handleSubmit, errors } = useForm();
     const [err, setErr] = useState()
     const [selectedGender, setSelectedGender] = useState("Male");
+    const [loading, setLoading] = useState(false);
 
     const { signup } = useAuth();
 
     const signIn = async ({ firstName, lastName, age, gender, email, password, passwordConfirmation }) => {
+        setLoading(true);
         if (password !== passwordConfirmation) {
             setErr("Passwords do not match")
         } else {
@@ -27,6 +29,7 @@ function Login({ navigation }) {
                 setError("Failed to create an account")
             }
         }
+        setLoading(false)
     }
 
     return (
@@ -179,7 +182,7 @@ function Login({ navigation }) {
 
 
                             <TouchableOpacity style={styles.appButtonContainer} onPress={handleSubmit(signIn)}>
-                                <Text style={styles.appButtonText}>Sign Up</Text>
+                                <Text style={loading ? styles.appButtonContainerDisabled : styles.appButtonText}>Sign Up</Text>
                             </TouchableOpacity>
                             {err && <Text style={styles.textErr}>{err}</Text>}
                         </View>
@@ -266,6 +269,13 @@ const styles = StyleSheet.create({
     appButtonContainer: {
         elevation: 8,
         backgroundColor: "#fff",
+        borderRadius: 10,
+        marginVertical: 10,
+        marginHorizontal: 60
+    },
+    appButtonContainerDisabled: {
+        elevation: 8,
+        backgroundColor: "#888",
         borderRadius: 10,
         marginVertical: 10,
         marginHorizontal: 60

@@ -3,16 +3,10 @@ import "firebase/auth";
 import "firebase/storage";
 import "firebase/firestore";
 
+import serviceAccount from './firebase.json';
+
 try {
-    firebase.initializeApp({
-        apiKey: "AIzaSyDl7tSvkG3Oo3cNJ_v_cJPHCbcZL4H6GTU",
-        authDomain: "react-native-maps-301417.firebaseapp.com",
-        projectId: "react-native-maps-301417",
-        storageBucket: "react-native-maps-301417.appspot.com",
-        messagingSenderId: "770638836183",
-        appId: "1:770638836183:web:b6c1cadbca5e79df539b92",
-        measurementId: "G-SDBXEMY3T5"
-    });
+    firebase.initializeApp(serviceAccount);
 } catch (e) {
     console.log(e.message)
 }

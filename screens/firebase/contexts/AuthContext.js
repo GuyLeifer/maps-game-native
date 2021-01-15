@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth, storage, db, loginWithGoogle, loginWithFacebook } from "../firebase";
+import * as GoogleSignIn from 'expo-google-sign-in';
+import * as AppAuth from 'expo-app-auth'
 
 const AuthContext = React.createContext()
 
@@ -21,6 +23,22 @@ export function AuthProvider({ children }) {
     }).catch(err => console.log(err.massage))
   }
 
+  function userDataCloud(userUid, firstName, lastName, email, age, gender) {
+    db.collection('users').doc(`${userUid}`).set({
+      userUid: userUid,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      age: age,
+      gender: gender,
+    }).then(function () {
+      console.log("Document successfully written!");
+    })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
+  };
+
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password)
   }
@@ -41,32 +59,31 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password)
   }
 
+  const config = {
+    issuer: 'https://accounts.google.com',
+    // behavior: 'web',
+    scopes: ['openid'],
+    /* This is the CLIENT_ID generated from a Firebase project */
+    clientId: '770638836183-ttrhs1n4h2g3e2mt3od3cr88kemqb7kt.apps.googleusercontent.com',
+  };
+
+  // let config = {
+  //   issuer: 'https://accounts.google.com',
+  //   scopes: ['openid', 'profile'],
+  //   /* This is the CLIENT_ID generated from a Firebase project */
+  //   clientId: '603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com',
+  // };
+
   const googleLogin = async () => {
-    console.log(1)
-    const provider = new firebase.auth.GoogleAuthProvider();
-    console.log(2)
-    return firebase.auth().signInWithPopup(provider).then(function (result) {
-    }).catch(function (error) {
-      return error
-    });
+    try {
+      await GoogleSignIn.initAsync({
+        clientId: '770638836183-ttrhs1n4h2g3e2mt3od3cr88kemqb7kt.apps.googleusercontent.com',
+      });
+    } catch ({ message }) {
+      alert('GoogleSignIn.initAsync(): ' + message);
+    }
   };
   const facebookLogin = async () => loginWithFacebook();
-
-  function userDataCloud(userUid, firstName, lastName, email, age, gender) {
-    db.collection('users').doc(`${userUid}`).set({
-      userUid: userUid,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      age: age,
-      gender: gender,
-    }).then(function () {
-      console.log("Document successfully written!");
-    })
-      .catch(function (error) {
-        console.error("Error writing document: ", error);
-      });
-  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
